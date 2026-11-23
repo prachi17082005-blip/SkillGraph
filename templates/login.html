@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Login</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="auth-page">
+
+<div class="auth-wrapper">
+
+    <div class="auth-left">
+        <h1>SkillGraph<span>.</span></h1>
+
+        <h2>Welcome Back!<br>Keep Growing.</h2>
+
+        <p>Continue your learning journey, analyze your skills and achieve your career goals with SkillGraph.</p>
+
+        <div class="learning-visual">
+            <div class="visual-circle">SG</div>
+            <div class="visual-text">Learn • Analyze • Grow</div>
+        </div>
+
+        <small>© 2026 SkillGraph. All rights reserved.</small>
+    </div>
+
+    <div class="auth-right">
+
+        <h2>Login to Account</h2>
+        <p class="auth-subtitle">Welcome back! Please enter your details.</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Username</label>
+            <input type="text" name="username"
+                   placeholder="Enter your username" required>
+
+            <label>Password</label>
+            <input type="password" name="password"
+                   placeholder="Enter your password" required>
+
+            <button type="submit">Login to Dashboard →</button>
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account?
+            <a href="{% url 'register' %}">Create Account</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

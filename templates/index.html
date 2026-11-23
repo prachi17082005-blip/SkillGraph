@@ -1,0 +1,616 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillGraph | Build Your Future</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9ff;
+            color: #202044;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            min-height: 82px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,.96);
+            box-shadow: 0 3px 20px rgba(35,35,90,.06);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 29px;
+            font-weight: 800;
+            color: #292568;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #7665ee;
+        }
+
+        .navbar nav {
+            display: flex;
+            gap: 35px;
+        }
+
+        .navbar nav a {
+            color: #555570;
+            font-size: 15px;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        .navbar nav a:hover {
+            color: #7665ee;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .login-btn, .signup-btn {
+            padding: 11px 22px;
+            border-radius: 9px;
+            font-weight: 650;
+            transition: .3s;
+        }
+
+        .login-btn {
+            color: #5144bb;
+            border: 1px solid #ddd9ff;
+        }
+
+        .signup-btn {
+            color: white;
+            background: linear-gradient(135deg,#7665ee,#5144c9);
+            box-shadow: 0 5px 14px rgba(100,80,220,.22);
+        }
+
+        .login-btn:hover, .signup-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 640px;
+            padding: 90px 9%;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            align-items: center;
+            gap: 50px;
+            background:
+                radial-gradient(circle at 85% 20%, #e4e0ff 0, transparent 32%),
+                linear-gradient(120deg,#f9faff,#f0efff);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e9e5ff;
+            color: #5d4bc7;
+            padding: 10px 17px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(39px,5vw,62px);
+            line-height: 1.14;
+            letter-spacing: -2px;
+            color: #222047;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(100deg,#7564ec,#a35ce3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content > p {
+            color: #6b6b85;
+            font-size: 17px;
+            line-height: 1.9;
+            max-width: 540px;
+            margin-bottom: 32px;
+        }
+
+        .primary-btn {
+            display: inline-block;
+            padding: 16px 27px;
+            color: white;
+            border-radius: 10px;
+            font-weight: 700;
+            background: linear-gradient(135deg,#7665ee,#5746ce);
+            box-shadow: 0 9px 24px rgba(100,80,220,.25);
+            transition: .3s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 13px 28px rgba(100,80,220,.35);
+        }
+
+        /* SKILL GRAPH VISUAL */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 410px;
+        }
+
+        .graph-card {
+            width: 100%;
+            max-width: 440px;
+            min-height: 350px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 25px;
+            background: rgba(255,255,255,.75);
+            box-shadow: 0 20px 60px rgba(67,55,150,.13);
+            backdrop-filter: blur(15px);
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .graph-card h3 {
+            font-size: 21px;
+            color: #292568;
+            margin-bottom: 25px;
+        }
+
+        .graph-center {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            margin: 25px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg,#7968ef,#a45ee5);
+            box-shadow: 0 0 0 12px #eeebff, 0 0 0 24px #f6f4ff;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .skill-node {
+            background: white;
+            color: #5144bb;
+            border: 1px solid #e5e1ff;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(40,30,100,.06);
+        }
+
+        .graph-card > p {
+            text-align: center;
+            color: #77758f;
+            font-size: 13px;
+            margin-top: 23px;
+        }
+
+        /* STATS */
+        .stats {
+            padding: 35px 8%;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 20px;
+            background: white;
+            border-bottom: 1px solid #eeeeF8;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .stat-item h2 {
+            color: #6756df;
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .stat-item p {
+            color: #77758e;
+            font-size: 14px;
+        }
+
+        /* FEATURES */
+        .features {
+            padding: 90px 9%;
+            text-align: center;
+        }
+
+        .section-tag {
+            color: #7665ee;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+        }
+
+        .features h2, .about h2 {
+            font-size: 36px;
+            color: #242249;
+            margin: 14px 0;
+        }
+
+        .section-description {
+            color: #77758e;
+            font-size: 16px;
+            margin-bottom: 48px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 22px;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 28px 23px;
+            border-radius: 17px;
+            border: 1px solid #efedfa;
+            box-shadow: 0 7px 25px rgba(40,35,100,.045);
+            transition: .3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-9px);
+            box-shadow: 0 17px 35px rgba(70,55,150,.12);
+            border-color: #dcd6ff;
+        }
+
+        .feature-icon {
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            background: #f0edff;
+            border-radius: 14px;
+            margin-bottom: 22px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            color: #302b68;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #77758e;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* ABOUT */
+        .about {
+            margin: 20px 9% 85px;
+            padding: 65px 30px;
+            text-align: center;
+            border-radius: 25px;
+            background: linear-gradient(120deg,#30276f,#6653d5);
+            color: white;
+        }
+
+        .about h2 {
+            color: white;
+        }
+
+        .about p {
+            max-width: 700px;
+            margin: 15px auto 25px;
+            color: #e0dcff;
+            line-height: 1.9;
+        }
+
+        .about .primary-btn {
+            background: white;
+            color: #5746c9;
+            box-shadow: none;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 28px 8%;
+            text-align: center;
+            color: #77758e;
+            background: white;
+            border-top: 1px solid #eeeef7;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 1000px) {
+            .feature-grid {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .hero {
+                padding: 70px 6%;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .navbar {
+                padding: 17px 5%;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .navbar nav {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 23px;
+            }
+
+            .nav-buttons {
+                gap: 8px;
+            }
+
+            .login-btn, .signup-btn {
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 65px 6%;
+            }
+
+            .hero-content > p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-visual {
+                min-height: 350px;
+            }
+
+            .graph-card {
+                max-width: 390px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .features {
+                padding: 65px 6%;
+            }
+
+            .features h2, .about h2 {
+                font-size: 28px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about {
+                margin: 10px 5% 55px;
+                padding: 45px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="/" class="logo">Skill<span>Graph</span></a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+    </nav>
+
+    <div class="nav-buttons">
+        <a href="/accounts/login/" class="login-btn">Login</a>
+        <a href="/accounts/register/" class="signup-btn">Get Started</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+            <span class="tag">✦ SMART SKILL LEARNING PLATFORM</span>
+
+            <h1>
+                Discover Your Skills.
+                <span>Unlock Your Potential.</span>
+            </h1>
+
+            <p>
+                Analyze your skills, identify learning gaps and build
+                a personalized roadmap to achieve your career goals.
+                Take control of your learning journey with SkillGraph.
+            </p>
+
+            <a href="/accounts/register/" class="primary-btn">
+                Start Your Journey →
+            </a>
+        </div>
+
+        <div class="hero-visual">
+            <div class="graph-card">
+                <h3>✦ Your Skill Network</h3>
+
+                <div class="graph-center">
+                    SKILL<br>GRAPH
+                </div>
+
+                <div class="skill-tags">
+                    <div class="skill-node">🐍 Python</div>
+                    <div class="skill-node">🌐 Django</div>
+                    <div class="skill-node">🗄️ MySQL</div>
+                    <div class="skill-node">🤖 AI & ML</div>
+                    <div class="skill-node">💻 Web Development</div>
+                </div>
+
+                <p>Connect skills. Discover opportunities.</p>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="stats">
+        <div class="stat-item">
+            <h2>01</h2>
+            <p>Assess Your Skills</p>
+        </div>
+
+        <div class="stat-item">
+            <h2>02</h2>
+            <p>Discover Learning Gaps</p>
+        </div>
+
+        <div class="stat-item">
+            <h2>03</h2>
+            <p>Build Your Future</p>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+
+        <span class="section-tag">POWERFUL FEATURES</span>
+
+        <h2>Everything You Need to Grow</h2>
+
+        <p class="section-description">
+            Smarter learning starts with understanding your skills.
+        </p>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Skill Assessment</h3>
+                <p>
+                    Evaluate your current knowledge and technical skills
+                    to understand where you stand.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Skill Dependency Graph</h3>
+                <p>
+                    Understand how different skills connect with each
+                    other and discover learning dependencies.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Learning Gap Analysis</h3>
+                <p>
+                    Identify missing skills and discover what you need
+                    to achieve your desired career.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Personalized Roadmap</h3>
+                <p>
+                    Follow a structured learning path and track your
+                    progress towards your career goals.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <span class="section-tag" style="color:#d7ceff;">
+            ABOUT SKILLGRAPH
+        </span>
+
+        <h2>Your Career. Your Learning Path.</h2>
+
+        <p>
+            SkillGraph helps students make informed learning decisions
+            through skill analysis, dependency visualization and progress
+            tracking. Learn smarter, build better skills and move closer
+            to your dream career.
+        </p>
+
+        <a href="/accounts/register/" class="primary-btn">
+            Get Started Today →
+        </a>
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 SkillGraph. All Rights Reserved.</p>
+    <p style="margin-top:8px;">Learn • Analyze • Grow</p>
+</footer>
+
+</body>
+</html>

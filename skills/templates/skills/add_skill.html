@@ -1,0 +1,260 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Add Skill</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f4fc;
+            color: #302b52;
+        }
+
+        .dashboard-main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 27px;
+            color: #28234e;
+        }
+
+        .dashboard-header p {
+            color: #77758c;
+            margin-top: 6px;
+        }
+
+        .dashboard-header a {
+            color: #7047d7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(120deg, #5940b8, #9470e9);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 12px 30px rgba(91, 65, 184, .15);
+        }
+
+        .welcome-banner h1 {
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-banner p {
+            color: #eee8ff;
+        }
+
+        .form-card {
+            max-width: 650px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            border: 1px solid #ece9f7;
+            box-shadow: 0 8px 28px rgba(44, 35, 90, .06);
+        }
+
+        .form-card h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+            color: #302b52;
+        }
+
+        .form-description {
+            color: #858198;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 23px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 9px;
+            color: #393454;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #dedbea;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            background: #fff;
+            color: #302b52;
+            transition: .3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #8059df;
+            box-shadow: 0 0 0 3px rgba(112, 71, 215, .10);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa7b8;
+        }
+
+        .form-help {
+            color: #9995aa;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 13px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .save-btn {
+            background: #7047d7;
+            color: white;
+            border: none;
+            padding: 13px 25px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .save-btn:hover {
+            background: #5633b2;
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background: #f0ebff;
+            color: #7047d7;
+            padding: 13px 23px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .cancel-btn:hover {
+            background: #e5dcff;
+        }
+
+        @media(max-width: 600px) {
+            .dashboard-main {
+                padding: 22px 15px;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .welcome-banner {
+                padding: 27px 22px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 24px;
+            }
+
+            .form-card {
+                padding: 24px 19px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-main">
+
+    <header class="dashboard-header">
+        <div>
+            <h2>Add New Skill</h2>
+            <p>Build your personal skill collection.</p>
+        </div>
+        <a href="{% url 'skill_list' %}">← My Skills</a>
+    </header>
+
+    <div class="welcome-banner">
+        <h1>Grow Your Skills</h1>
+        <p>Add your technical skills and track your learning journey with SkillGraph.</p>
+    </div>
+
+    <div class="form-card">
+
+        <h2>Add Your Skill</h2>
+        <p class="form-description">
+            Enter your skill details to add it to your personal collection.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="skill_name">Skill Name</label>
+                <input
+                    type="text"
+                    id="skill_name"
+                    name="skill_name"
+                    placeholder="Example: Python, HTML, Java"
+                    required
+                >
+                <p class="form-help">Enter the name of a technical skill.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="level">Choose Skill Level</label>
+                <select id="level" name="level" required>
+                    <option value="">Select Level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">
+                    Save Skill →
+                </button>
+
+                <a href="{% url 'skill_list' %}" class="cancel-btn">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,548 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Student Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body.dashboard-page {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f6f7fc;
+            color: #25234b;
+        }
+
+        a { text-decoration: none; }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: linear-gradient(180deg,#292568,#44358f);
+            padding: 30px 18px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+            padding: 0 12px;
+            margin-bottom: 42px;
+            letter-spacing: -.8px;
+        }
+
+        .brand span { color: #b8aaff; }
+
+        .menu-heading {
+            color: #bdb7e8;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            padding: 0 13px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar > a,
+        .sidebar-bottom a {
+            display: block;
+            padding: 13px 14px;
+            margin-bottom: 7px;
+            color: #e5e2fa;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: .25s;
+        }
+
+        .sidebar > a:hover,
+        .sidebar-bottom a:hover,
+        .sidebar > a.active {
+            background: rgba(255,255,255,.16);
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,.16);
+        }
+
+        /* MAIN */
+        .dashboard-main {
+            flex: 1;
+            min-width: 0;
+            padding: 32px 4%;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .dashboard-header h2 {
+            color: #292568;
+            font-size: 25px;
+            margin-bottom: 6px;
+        }
+
+        .dashboard-header p {
+            color: #85839b;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,#7665ee,#a45ce3);
+            color: white;
+            font-size: 21px;
+            font-weight: 800;
+            box-shadow: 0 5px 15px rgba(100,80,220,.2);
+        }
+
+        /* WELCOME */
+        .welcome-banner {
+            padding: 37px 40px;
+            border-radius: 20px;
+            color: white;
+            background: linear-gradient(115deg,#393080,#7561e8);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(72,55,160,.16);
+            margin-bottom: 38px;
+        }
+
+        .welcome-banner::after {
+            content: "✦";
+            position: absolute;
+            right: 65px;
+            top: -55px;
+            font-size: 210px;
+            color: rgba(255,255,255,.08);
+        }
+
+        .welcome-banner h1 {
+            font-size: 29px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            color: #e3dfff;
+            line-height: 1.7;
+            font-size: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-heading {
+            color: #292568;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* STATISTICS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 19px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #efedfa;
+            border-radius: 15px;
+            padding: 23px;
+            box-shadow: 0 5px 20px rgba(40,35,100,.04);
+            transition: .3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(70,55,150,.09);
+        }
+
+        .stat-card > span {
+            display: inline-flex;
+            width: 45px;
+            height: 45px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: #f0edff;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            color: #77758e;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h2 {
+            color: #5144bb;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #9290a5;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 5px;
+        }
+
+        /* TOOL CARDS */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 1px solid #efedfa;
+            border-radius: 16px;
+            padding: 25px;
+            min-height: 205px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-shadow: 0 5px 20px rgba(40,35,100,.04);
+            transition: .3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-7px);
+            border-color: #d8d1ff;
+            box-shadow: 0 15px 30px rgba(70,55,150,.11);
+        }
+
+        .tool-card > span {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0edff;
+            border-radius: 13px;
+            font-size: 23px;
+            margin-bottom: 17px;
+        }
+
+        .tool-card h3 {
+            color: #302b68;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #85839b;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .tool-card strong {
+            color: #6756df;
+            font-size: 13px;
+            margin-top: auto;
+        }
+
+        /* PROFILE */
+        .profile-section {
+            margin-top: 38px;
+            background: white;
+            border: 1px solid #efedfa;
+            padding: 27px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(40,35,100,.04);
+        }
+
+        .profile-section h2 {
+            color: #292568;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-info p {
+            color: #77758e;
+            background: #f8f8ff;
+            border-radius: 9px;
+            padding: 14px;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-info strong { color: #38345f; }
+
+        .logout-profile {
+            display: inline-block;
+            padding: 11px 18px;
+            color: white;
+            background: #6756df;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .dashboard-footer {
+            text-align: center;
+            color: #89879c;
+            font-size: 13px;
+            margin-top: 45px;
+            padding: 20px;
+            border-top: 1px solid #eae8f3;
+        }
+
+        .dashboard-footer p { margin-top: 7px; }
+
+        @media(max-width: 1100px) {
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+            .tools-grid { grid-template-columns: repeat(2,1fr); }
+        }
+
+        @media(max-width: 750px) {
+            .dashboard-layout { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                min-width: 0;
+                padding: 20px;
+            }
+            .brand { margin-bottom: 20px; }
+            .sidebar > a,
+            .sidebar-bottom a {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+                font-size: 12px;
+            }
+            .menu-heading { margin-bottom: 8px; }
+            .sidebar-bottom {
+                margin-top: 15px;
+                padding-top: 12px;
+            }
+            .dashboard-main { padding: 25px 5%; }
+            .welcome-banner { padding: 28px 22px; }
+            .welcome-banner h1 { font-size: 23px; }
+        }
+
+        @media(max-width: 500px) {
+            .stats-grid,
+            .tools-grid,
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-header h2 { font-size: 20px; }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <h2 class="brand">SkillGraph<span>.</span></h2>
+
+        <p class="menu-heading">MAIN MENU</p>
+
+        <a href="{% url 'dashboard' %}" class="active">▦ Dashboard</a>
+
+        <a href="{% url 'skill_list' %}">✦ My Skills</a>
+
+        <a href="{% url 'dependency_list' %}">◈ Skill Dependency Graph</a>
+
+        <a href="{% url 'skill_gap_analyzer' %}">🎯 Skill Gap Analyzer</a>
+
+        <a href="{% url 'career_comparison' %}">⚖️ Career Comparison</a>
+
+        <a href="{% url 'roadmap_list' %}">🗺 Learning Roadmap</a>
+
+        <a href="{% url 'progress_dashboard' %}">📊 Progress Analytics</a>
+
+        {% if request.user.is_staff %}
+        <a href="{% url 'admin:index' %}">⚙️ Admin Panel</a>
+        {% endif %}
+
+        <div class="sidebar-bottom">
+            <a href="#profile">♙ My Profile</a>
+            <a href="{% url 'logout' %}">↪ Logout</a>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+            <div>
+                <h2>Dashboard Overview</h2>
+                <p>Welcome back, {{ request.user.username }}!</p>
+            </div>
+
+            <div class="user-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+        </header>
+
+        <section class="welcome-banner">
+            <h1>Welcome to SkillGraph! 👋</h1>
+            <p>
+                Build your skills, identify learning gaps
+                and achieve your career goals.
+            </p>
+        </section>
+
+        <h2 class="section-heading">Your Learning Overview</h2>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <span>📚</span>
+                <h3>My Skills</h3>
+                <h2>Manage</h2>
+                <p>Your technical skills</p>
+            </div>
+
+            <div class="stat-card">
+                <span>🎯</span>
+                <h3>Skill Analysis</h3>
+                <h2>Explore</h2>
+                <p>Analyze your learning needs</p>
+            </div>
+
+            <div class="stat-card">
+                <span>🗺️</span>
+                <h3>Roadmap</h3>
+                <h2>Plan</h2>
+                <p>Your learning journey</p>
+            </div>
+
+            <div class="stat-card">
+                <span>📈</span>
+                <h3>Progress</h3>
+                <h2>Track</h2>
+                <p>Your learning achievements</p>
+            </div>
+
+        </section>
+
+        <h2 class="section-heading">Explore Your Learning Tools</h2>
+
+        <section class="tools-grid">
+
+            <a href="{% url 'skill_list' %}" class="tool-card" id="skills">
+                <span>💡</span>
+                <h3>My Skills</h3>
+                <p>Add, view and manage your technical skills.</p>
+                <strong>Explore Skills →</strong>
+            </a>
+
+            <a href="{% url 'dependency_list' %}" class="tool-card" id="analyzer">
+                <span>🔍</span>
+                <h3>Skill Dependency Graph</h3>
+                <p>Connect skills and understand their learning order.</p>
+                <strong>Explore Dependencies →</strong>
+            </a>
+
+            <a href="{% url 'skill_gap_analyzer' %}" class="tool-card" id="skill-gap">
+                <span>🎯</span>
+                <h3>Skill Gap Analyzer</h3>
+                <p>Compare your existing skills with career requirements.</p>
+                <strong>Analyze My Skills →</strong>
+            </a>
+
+            <a href="{% url 'career_comparison' %}" class="tool-card" id="career-comparison">
+                <span>⚖️</span>
+                <h3>Career Comparison</h3>
+                <p>Compare different career roles and find your best skill match.</p>
+                <strong>Compare Careers →</strong>
+            </a>
+
+            <a href="{% url 'roadmap_list' %}" class="tool-card" id="roadmap">
+                <span>🛤️</span>
+                <h3>Learning Roadmap</h3>
+                <p>Follow your personalized learning path.</p>
+                <strong>Open Learning Roadmap →</strong>
+            </a>
+
+            <a href="{% url 'progress_dashboard' %}" class="tool-card" id="progress">
+                <span>📊</span>
+                <h3>Progress Analytics</h3>
+                <p>Track completed, pending and ongoing learning skills.</p>
+                <strong>View Progress Analytics →</strong>
+            </a>
+
+        </section>
+
+        <!-- PROFILE -->
+        <section class="profile-section" id="profile">
+
+            <h2>♙ My Profile</h2>
+
+            <div class="profile-info">
+                <p>
+                    <strong>Username:</strong>
+                    {{ request.user.username }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ request.user.email }}
+                </p>
+            </div>
+
+            <a href="{% url 'logout' %}" class="logout-profile">
+                Logout from Account →
+            </a>
+
+        </section>
+
+        <footer class="dashboard-footer">
+            SkillGraph © 2026
+            <p>Learn • Analyze • Grow</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

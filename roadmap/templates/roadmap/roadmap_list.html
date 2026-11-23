@@ -1,0 +1,612 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillGraph | Learning Roadmaps</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5fc;
+            color: #292546;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .dashboard-main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 22px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-header h2 {
+            color: #30234f;
+            font-size: 26px;
+            margin-bottom: 7px;
+        }
+
+        .dashboard-header p {
+            color: #77748e;
+            font-size: 14px;
+        }
+
+        .dashboard-header a {
+            color: #6948d8;
+            text-decoration: none;
+            font-weight: 650;
+        }
+
+        .dashboard-header a:hover {
+            color: #4325ad;
+        }
+
+        .welcome-banner {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(125deg, #39228f, #6546d8, #8b5cf6);
+            color: white;
+            padding: 38px;
+            border-radius: 21px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 30px rgba(91,63,190,.17);
+        }
+
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 35px solid rgba(255,255,255,.08);
+            border-radius: 50%;
+            right: -55px;
+            top: -90px;
+        }
+
+        .welcome-banner h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            color: #e9e4ff;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .roadmap-action {
+            display: inline-block;
+            padding: 13px 21px;
+            background: linear-gradient(110deg,#6242d5,#8158ed);
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 650;
+            font-size: 14px;
+            margin-top: 12px;
+            box-shadow: 0 5px 14px rgba(98,66,213,.18);
+            transition: .2s;
+        }
+
+        .roadmap-action:hover {
+            background: linear-gradient(110deg,#4d2dbb,#7045dd);
+            transform: translateY(-2px);
+        }
+
+        .roadmap-card {
+            background: #fff;
+            padding: 29px;
+            border-radius: 18px;
+            border: 1px solid #eeebfa;
+            box-shadow: 0 7px 25px rgba(43,32,92,.045);
+            margin-bottom: 28px;
+        }
+
+        .roadmap-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .roadmap-top h2 {
+            color: #30234f;
+            margin-bottom: 9px;
+            font-size: 22px;
+        }
+
+        .roadmap-top p {
+            color: #77748e;
+            font-size: 14px;
+        }
+
+        .career-label {
+            background: #eee9ff;
+            color: #6845ce;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-weight: 650;
+            font-size: 13px;
+        }
+
+        .roadmap-description {
+            color: #77748e;
+            margin: 15px 0;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 26px 0;
+        }
+
+        .analytics-card {
+            padding: 21px;
+            border-radius: 14px;
+            background: #faf9ff;
+            border: 1px solid #eeebfa;
+            transition: .2s;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(65,45,130,.07);
+        }
+
+        .analytics-card h3 {
+            font-size: 28px;
+            color: #6948d8;
+            margin-bottom: 6px;
+        }
+
+        .analytics-card p {
+            color: #77748e;
+            font-size: 13px;
+            font-weight: 550;
+        }
+
+        .analytics-icon {
+            font-size: 22px;
+            margin-bottom: 11px;
+        }
+
+        .progress-section {
+            background: #faf9ff;
+            border: 1px solid #eeebfa;
+            padding: 23px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .progress-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .progress-heading h3 {
+            color: #30234f;
+            font-size: 17px;
+        }
+
+        .progress-percent {
+            color: #6948d8;
+            font-size: 22px;
+            font-weight: 750;
+        }
+
+        .progress-track {
+            height: 13px;
+            width: 100%;
+            background: #ece9f7;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#6242d5,#a17bf8);
+            border-radius: 20px;
+            transition: width .5s ease;
+        }
+
+        .progress-note {
+            color: #77748e;
+            font-size: 13px;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        .section-heading {
+            color: #30234f;
+            margin: 27px 0 17px;
+            font-size: 19px;
+        }
+
+        .roadmap-step {
+            border-left: 4px solid #7956df;
+            padding: 19px 21px;
+            margin: 16px 0;
+            background: #faf9ff;
+            border-radius: 0 13px 13px 0;
+            border-top: 1px solid #f0edf9;
+            border-right: 1px solid #f0edf9;
+            border-bottom: 1px solid #f0edf9;
+            transition: .2s;
+        }
+
+        .roadmap-step:hover {
+            background: #f6f3ff;
+            transform: translateX(3px);
+        }
+
+        .roadmap-step h4 {
+            color: #342b58;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .roadmap-step p {
+            color: #77748e;
+            margin: 9px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .step-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #eee9ff;
+            color: #6845ce;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .status-form {
+            display: flex;
+            gap: 11px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .status-form select {
+            width: auto;
+            min-width: 160px;
+            padding: 11px 13px;
+            border: 1px solid #ded9f0;
+            border-radius: 9px;
+            background: white;
+            color: #40365f;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .status-form select:focus {
+            border-color: #7956df;
+        }
+
+        .status-form button {
+            padding: 11px 17px;
+            border: none;
+            border-radius: 9px;
+            background: #6948d8;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .status-form button:hover {
+            background: #4d2dbb;
+        }
+
+        .empty-roadmap {
+            text-align: center;
+            padding: 48px 22px;
+            background: white;
+            border: 1px solid #eeebfa;
+            border-radius: 18px;
+            box-shadow: 0 7px 25px rgba(43,32,92,.045);
+        }
+
+        .empty-roadmap h2 {
+            color: #30234f;
+            margin-bottom: 13px;
+        }
+
+        .empty-roadmap p {
+            color: #77748e;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .roadmap-message {
+            padding: 13px 16px;
+            background: #eee9ff;
+            color: #6845ce;
+            border: 1px solid #ddd3ff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eeeaf7;
+            margin: 25px 0;
+        }
+
+        .dashboard-footer {
+            text-align: center;
+            padding: 25px;
+            color: #88839d;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media(max-width: 850px) {
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 500px) {
+            .dashboard-main {
+                padding: 18px 12px;
+            }
+
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .roadmap-card {
+                padding: 19px;
+            }
+
+            .analytics-card {
+                padding: 15px;
+            }
+
+            .welcome-banner {
+                padding: 27px 22px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 23px;
+            }
+
+            .status-form select {
+                width: 100%;
+            }
+
+            .status-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-main">
+
+    <header class="dashboard-header">
+        <div>
+            <h2>Learning Roadmaps</h2>
+            <p>Plan your learning journey and achieve your career goals.</p>
+        </div>
+
+        <a href="{% url 'dashboard' %}">← Dashboard</a>
+    </header>
+
+    <section class="welcome-banner">
+        <h1>🗺️ Your Learning Journey</h1>
+        <p>Build skills step by step, track your progress and prepare for your dream career.</p>
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="roadmap-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="margin-bottom:25px;">
+        <a href="{% url 'create_roadmap' %}" class="roadmap-action">
+            + Create New Roadmap
+        </a>
+    </div>
+
+    {% for roadmap in roadmaps %}
+
+        <section class="roadmap-card">
+
+            <div class="roadmap-top">
+                <div>
+                    <h2>{{ roadmap.title }}</h2>
+                    <p><strong>Career Goal:</strong> {{ roadmap.career_goal }}</p>
+                </div>
+
+                <span class="career-label">🎯 Career Plan</span>
+            </div>
+
+            {% if roadmap.description %}
+                <p class="roadmap-description">
+                    {{ roadmap.description }}
+                </p>
+            {% endif %}
+
+            <div class="analytics-grid">
+
+                <div class="analytics-card">
+                    <div class="analytics-icon">📚</div>
+                    <h3>{{ roadmap.total_steps }}</h3>
+                    <p>Total Learning Steps</p>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-icon">✅</div>
+                    <h3>{{ roadmap.completed_steps }}</h3>
+                    <p>Completed Steps</p>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-icon">⏳</div>
+                    <h3>{{ roadmap.pending_steps }}</h3>
+                    <p>Pending Steps</p>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="analytics-icon">📅</div>
+                    <h3>{{ roadmap.total_days }}</h3>
+                    <p>Total Learning Days</p>
+                </div>
+
+            </div>
+
+            <div class="progress-section">
+
+                <div class="progress-heading">
+                    <h3>Overall Learning Progress</h3>
+
+                    <span class="progress-percent">
+                        {{ roadmap.progress_percent }}%
+                    </span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill"
+                         style="width: {{ roadmap.progress_percent }}%;">
+                    </div>
+                </div>
+
+                <p class="progress-note">
+                    {{ roadmap.completed_steps }} out of
+                    {{ roadmap.total_steps }} learning steps completed.
+                    {{ roadmap.in_progress_steps }} currently in progress.
+                </p>
+
+            </div>
+
+            <hr>
+
+            <h3 class="section-heading">Learning Steps</h3>
+
+            {% for step in roadmap.steps.all %}
+
+                <div class="roadmap-step">
+
+                    <h4>
+                        {{ forloop.counter }}. {{ step.skill_name }}
+                    </h4>
+
+                    {% if step.description %}
+                        <p>{{ step.description }}</p>
+                    {% endif %}
+
+                    <p>
+                        <strong>Level:</strong> {{ step.level }}
+                        &nbsp; | &nbsp;
+                        <strong>Duration:</strong>
+                        {{ step.duration_days }} days
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        <span class="step-status">{{ step.status }}</span>
+                    </p>
+
+                    <form method="POST"
+                          action="{% url 'update_step_status' step.id %}"
+                          class="status-form">
+
+                        {% csrf_token %}
+
+                        <select name="status" required>
+
+                            <option value="Pending"
+                                {% if step.status == 'Pending' %}selected{% endif %}>
+                                Pending
+                            </option>
+
+                            <option value="In Progress"
+                                {% if step.status == 'In Progress' %}selected{% endif %}>
+                                In Progress
+                            </option>
+
+                            <option value="Completed"
+                                {% if step.status == 'Completed' %}selected{% endif %}>
+                                Completed
+                            </option>
+
+                        </select>
+
+                        <button type="submit">Update Status</button>
+
+                    </form>
+
+                </div>
+
+            {% empty %}
+
+                <p class="empty">No learning steps added yet.</p>
+
+            {% endfor %}
+
+            <a href="{% url 'add_roadmap_step' roadmap.id %}"
+               class="roadmap-action">
+                + Add Learning Step
+            </a>
+
+        </section>
+
+    {% empty %}
+
+        <section class="empty-roadmap">
+            <h2>Start Your Learning Journey 🚀</h2>
+            <p>You have not created any learning roadmap yet.</p>
+            <p>Create your first career roadmap to get started.</p>
+
+            <a href="{% url 'create_roadmap' %}" class="roadmap-action">
+                Create My First Roadmap
+            </a>
+        </section>
+
+    {% endfor %}
+
+    <footer class="dashboard-footer">
+        SkillGraph © 2026
+        <p>Learn • Analyze • Grow</p>
+    </footer>
+
+</div>
+
+</body>
+</html>

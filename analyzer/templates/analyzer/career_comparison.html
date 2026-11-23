@@ -1,0 +1,604 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillGraph | Career Comparison</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f6f5fc;
+            color: #292546;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #30234f;
+            font-size: 27px;
+            font-weight: 750;
+        }
+
+        .back-link {
+            color: #6948d8;
+            text-decoration: none;
+            font-weight: 650;
+            transition: .2s;
+        }
+
+        .back-link:hover {
+            color: #4325ad;
+            transform: translateX(-3px);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(125deg, #39228f, #6546d8, #8b5cf6);
+            padding: 38px;
+            border-radius: 21px;
+            color: white;
+            margin-bottom: 27px;
+            box-shadow: 0 12px 30px rgba(91, 63, 190, .17);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 35px solid rgba(255,255,255,.08);
+            border-radius: 50%;
+            right: -55px;
+            top: -90px;
+        }
+
+        .hero h2 {
+            font-size: 27px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            line-height: 1.8;
+            color: #e9e4ff;
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: white;
+            padding: 29px;
+            border-radius: 18px;
+            margin-bottom: 26px;
+            border: 1px solid #eeebfa;
+            box-shadow: 0 7px 25px rgba(43,32,92,.045);
+        }
+
+        .card h2 {
+            color: #30234f;
+            margin-bottom: 16px;
+            font-size: 21px;
+        }
+
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 22px 0;
+        }
+
+        .career-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 17px;
+            border: 1px solid #e7e2f5;
+            border-radius: 12px;
+            background: #fcfbff;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .career-option:hover {
+            border-color: #8b6ce9;
+            background: #f5f1ff;
+            transform: translateY(-2px);
+        }
+
+        .career-option input {
+            width: 18px;
+            height: 18px;
+            accent-color: #704bdc;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .career-option label {
+            font-weight: 600;
+            cursor: pointer;
+            color: #40365f;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(110deg, #6242d5, #8158ed);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .2s;
+            box-shadow: 0 5px 14px rgba(98,66,213,.18);
+        }
+
+        .primary-btn:hover {
+            background: linear-gradient(110deg, #4d2dbb, #7045dd);
+            transform: translateY(-2px);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            border: 1px solid #e9e5f4;
+            border-radius: 16px;
+            padding: 24px;
+            background: #fff;
+            transition: .2s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 23px rgba(43,32,92,.07);
+        }
+
+        .result-card.best {
+            border: 2px solid #7956df;
+            background: #fcfaff;
+        }
+
+        .result-card h3 {
+            font-size: 19px;
+            color: #30234f;
+            margin-bottom: 15px;
+        }
+
+        .best-label {
+            display: inline-block;
+            background: #eee8ff;
+            color: #6845ce;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .score {
+            font-size: 37px;
+            font-weight: 800;
+            color: #6948d8;
+            margin: 12px 0;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 11px;
+            background: #ece9f7;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 19px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6242d5, #a17bf8);
+            border-radius: 20px;
+            transition: width .5s ease;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+            margin-bottom: 20px;
+        }
+
+        .result-stat {
+            background: #f7f5fd;
+            border: 1px solid #efecf8;
+            padding: 13px 5px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .result-stat strong {
+            display: block;
+            color: #6948d8;
+            font-size: 21px;
+            margin-bottom: 4px;
+        }
+
+        .result-stat span {
+            font-size: 11px;
+            color: #77748e;
+            font-weight: 550;
+        }
+
+        .skill-heading {
+            font-size: 14px;
+            margin: 17px 0 9px;
+            color: #44375f;
+        }
+
+        .skill-list {
+            font-size: 13px;
+            line-height: 2;
+            color: #68647d;
+            overflow-wrap: anywhere;
+            background: #faf9fd;
+            padding: 10px 12px;
+            border-radius: 9px;
+        }
+
+        .chart-description {
+            color: #77748e;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .chart-row {
+            margin: 24px 0;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 11px;
+            font-size: 14px;
+            font-weight: 650;
+            color: #40365f;
+        }
+
+        .chart-track {
+            height: 19px;
+            width: 100%;
+            background: #ece9f7;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .chart-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #704bdc, #a17bf8);
+            border-radius: 20px;
+            transition: width .5s ease;
+        }
+
+        .chart-row:first-of-type .chart-bar {
+            background: linear-gradient(90deg, #07865d, #20bd8b);
+        }
+
+        .chart-scale {
+            display: flex;
+            justify-content: space-between;
+            color: #9691aa;
+            font-size: 11px;
+            margin-top: 9px;
+        }
+
+        .empty {
+            color: #77748e;
+            padding: 15px 0;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #88839d;
+            font-size: 13px;
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                padding: 12px;
+                margin: 15px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .hero {
+                padding: 26px 22px;
+            }
+
+            .hero h2 {
+                font-size: 23px;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-stats {
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <h1>Career Comparison</h1>
+
+        <a href="{% url 'dashboard' %}" class="back-link">
+            ← Dashboard
+        </a>
+    </header>
+
+    <section class="hero">
+        <h2>⚖️ Compare Your Career Opportunities</h2>
+
+        <p>
+            Compare your skills with different career roles.
+            Discover which career matches your current skills best.
+        </p>
+    </section>
+
+    <section class="card">
+
+        <h2>🎯 Select Careers to Compare</h2>
+
+        <p class="empty">
+            Select at least two career roles to compare your readiness.
+        </p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="career-grid">
+
+                {% for career in careers %}
+
+                    <div class="career-option">
+
+                        <input
+                            type="checkbox"
+                            name="careers"
+                            value="{{ career.id }}"
+                            id="career{{ career.id }}"
+                            {% if career.id|stringformat:"s" in selected_ids %}checked{% endif %}
+                        >
+
+                        <label for="career{{ career.id }}">
+                            {{ career.role_name }}
+                        </label>
+
+                    </div>
+
+                {% empty %}
+
+                    <p>No career roles available. Please add careers first.</p>
+
+                {% endfor %}
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Compare Careers →
+            </button>
+
+        </form>
+
+    </section>
+
+    {% if comparison_data %}
+
+        <section class="card">
+
+            <h2>📈 Career Readiness Comparison Chart</h2>
+
+            <p class="chart-description">
+                Compare your career readiness scores.
+                A higher percentage indicates a stronger match with the required skills.
+            </p>
+
+            {% for item in comparison_data %}
+
+                <div class="chart-row">
+
+                    <div class="chart-label">
+
+                        <span>{{ item.career.role_name }}</span>
+
+                        <span>{{ item.score }}%</span>
+
+                    </div>
+
+                    <div class="chart-track">
+
+                        <div
+                            class="chart-bar"
+                            style="width: {{ item.score }}%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+            <div class="chart-scale">
+                <span>0%</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+                <span>100%</span>
+            </div>
+
+        </section>
+
+        <section class="card">
+
+            <h2>📊 Your Career Comparison Results</h2>
+
+            <div class="results-grid">
+
+                {% for item in comparison_data %}
+
+                    <div class="result-card {% if forloop.first %}best{% endif %}">
+
+                        {% if forloop.first %}
+
+                            <span class="best-label">
+                                🏆 Best Skill Match
+                            </span>
+
+                        {% endif %}
+
+                        <h3>{{ item.career.role_name }}</h3>
+
+                        <p>Career Readiness Score</p>
+
+                        <div class="score">
+                            {{ item.score }}%
+                        </div>
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                style="width: {{ item.score }}%;">
+                            </div>
+
+                        </div>
+
+                        <div class="result-stats">
+
+                            <div class="result-stat">
+                                <strong>{{ item.total_required }}</strong>
+                                <span>Required</span>
+                            </div>
+
+                            <div class="result-stat">
+                                <strong>{{ item.matched_count }}</strong>
+                                <span>Matched</span>
+                            </div>
+
+                            <div class="result-stat">
+                                <strong>{{ item.missing_count }}</strong>
+                                <span>Missing</span>
+                            </div>
+
+                        </div>
+
+                        <h4 class="skill-heading">
+                            ✅ Matched Skills
+                        </h4>
+
+                        <div class="skill-list">
+
+                            {% for skill in item.matched_skills %}
+
+                                ✓ {{ skill }}<br>
+
+                            {% empty %}
+
+                                No matched skills
+
+                            {% endfor %}
+
+                        </div>
+
+                        <h4 class="skill-heading">
+                            📚 Skills to Learn
+                        </h4>
+
+                        <div class="skill-list">
+
+                            {% for skill in item.missing_skills %}
+
+                                • {{ skill }}<br>
+
+                            {% empty %}
+
+                                All required skills matched!
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    {% elif is_post %}
+
+        <section class="card">
+
+            <p class="empty">
+                No comparison results found.
+                Please select at least two valid career roles.
+            </p>
+
+        </section>
+
+    {% endif %}
+
+</div>
+
+<footer class="footer">
+    SkillGraph © 2026 | Learn • Analyze • Grow
+</footer>
+
+</body>
+</html>

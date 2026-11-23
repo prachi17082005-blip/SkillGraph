@@ -1,0 +1,480 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Skill Gap Analyzer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f6f5fc;
+            color: #252344;
+        }
+
+        .main {
+            max-width: 1150px;
+            margin: auto;
+            padding: 35px 22px 55px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            color: #6546d8;
+            text-decoration: none;
+            font-weight: 650;
+            transition: .2s;
+        }
+
+        .back-link:hover {
+            color: #4325ad;
+            transform: translateX(-3px);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(125deg, #39228f, #6546d8, #8b5cf6);
+            color: white;
+            padding: 42px;
+            border-radius: 22px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 30px rgba(91, 63, 190, .18);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            border: 35px solid rgba(255,255,255,.08);
+            border-radius: 50%;
+            right: -55px;
+            top: -85px;
+        }
+
+        .hero h1 {
+            font-size: 31px;
+            margin-bottom: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            max-width: 680px;
+            line-height: 1.8;
+            color: #e9e4ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 26px;
+            border: 1px solid #eeebfa;
+            box-shadow: 0 7px 25px rgba(43, 32, 92, .045);
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-bottom: 12px;
+            color: #29234d;
+        }
+
+        .description {
+            color: #77748e;
+            margin-bottom: 22px;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ded9f0;
+            border-radius: 11px;
+            font-size: 15px;
+            margin-bottom: 20px;
+            background: #fcfbff;
+            color: #373151;
+            outline: none;
+            transition: .2s;
+        }
+
+        select:focus {
+            border-color: #7654e8;
+            box-shadow: 0 0 0 3px rgba(118,84,232,.12);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(110deg, #6242d5, #8158ed);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 650;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            box-shadow: 0 5px 14px rgba(98,66,213,.18);
+        }
+
+        .btn:hover {
+            background: linear-gradient(110deg, #4d2dbb, #7045dd);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .stat {
+            background: #faf9ff;
+            border: 1px solid #eeeafd;
+            padding: 25px 18px;
+            border-radius: 15px;
+            text-align: center;
+            transition: .2s;
+        }
+
+        .stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(65,45,130,.07);
+        }
+
+        .stat h3 {
+            color: #6947d9;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .stat p {
+            color: #77748e;
+            font-size: 13px;
+            font-weight: 550;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background: #ece9f7;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6242d5, #a17bf8);
+            border-radius: 20px;
+            transition: width .5s ease;
+        }
+
+        .score {
+            font-size: 43px;
+            font-weight: 750;
+            color: #6545d5;
+            margin-top: 12px;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .skill-box {
+            background: white;
+            border: 1px solid #eeebfa;
+            border-radius: 18px;
+            padding: 27px;
+            box-shadow: 0 7px 25px rgba(43,32,92,.045);
+        }
+
+        .skill-box h2 {
+            font-size: 19px;
+            margin-bottom: 10px;
+            color: #302951;
+        }
+
+        .skill-box p {
+            color: #77748e;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .skill-item {
+            display: block;
+            padding: 13px 15px;
+            margin-bottom: 11px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .matched {
+            background: #edfbf4;
+            color: #08764c;
+            border: 1px solid #c8f0dc;
+        }
+
+        .missing {
+            background: #fff6ed;
+            color: #bd5b17;
+            border: 1px solid #ffe1c5;
+        }
+
+        .recommendation {
+            padding: 17px;
+            border: 1px solid #eeeafd;
+            border-radius: 12px;
+            margin-bottom: 13px;
+            background: #fcfbff;
+            transition: .2s;
+        }
+
+        .recommendation:hover {
+            border-color: #cfc3f8;
+            transform: translateX(3px);
+        }
+
+        .recommendation strong {
+            color: #342b58;
+            font-size: 15px;
+        }
+
+        .importance {
+            display: inline-block;
+            margin-top: 9px;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #eee9ff;
+            color: #6845ce;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .report-btn {
+            margin-top: 18px;
+            background: linear-gradient(110deg, #07865d, #10a879);
+            box-shadow: 0 5px 14px rgba(8,134,93,.15);
+        }
+
+        .report-btn:hover {
+            background: linear-gradient(110deg, #06704d, #078e65);
+        }
+
+        .empty {
+            color: #77748e;
+            background: #f8f7fc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed #ded9ef;
+            font-size: 14px;
+        }
+
+        @media(max-width: 700px) {
+            .skill-grid,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 28px 23px;
+            }
+
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .card,
+            .skill-box {
+                padding: 21px;
+            }
+
+            .score {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main">
+
+    <a href="/dashboard/" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+    <section class="hero">
+        <h1>🎯 Smart Skill Gap Analyzer</h1>
+        <p>
+            Analyze your existing skills, identify missing skills
+            and discover how ready you are for your dream career.
+        </p>
+    </section>
+
+    <section class="card">
+        <h2>Select Your Career Goal</h2>
+        <p class="description">
+            Choose a career role to analyze your skills and readiness.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <select name="career" required>
+                <option value="">-- Select Career Role --</option>
+
+                {% for career in careers %}
+                    <option value="{{ career.id }}"
+                        {% if selected_role and selected_role.id == career.id %}
+                            selected
+                        {% endif %}>
+                        {{ career.role_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn">
+                Analyze My Skills →
+            </button>
+        </form>
+    </section>
+
+    {% if selected_role %}
+
+        <section class="card">
+            <h2>📊 Your Career Readiness</h2>
+
+            <p class="description">
+                Analysis for {{ selected_role.role_name }}
+            </p>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <h3>{{ readiness_score }}%</h3>
+                    <p>Readiness Score</p>
+                </div>
+
+                <div class="stat">
+                    <h3>{{ total_matched }}</h3>
+                    <p>Matched Skills</p>
+                </div>
+
+                <div class="stat">
+                    <h3>{{ missing_skills|length }}</h3>
+                    <p>Missing Skills</p>
+                </div>
+
+            </div>
+
+            <div style="margin-top:28px;">
+                <strong>Overall Career Readiness</strong>
+
+                <div class="progress-track">
+                    <div class="progress-fill"
+                         style="width:{{ readiness_score }}%;">
+                    </div>
+                </div>
+
+                <div class="score">
+                    {{ readiness_score }}%
+                </div>
+
+                <p style="color:#77748e;">
+                    Status: <strong>{{ readiness_label }}</strong>
+                </p>
+            </div>
+        </section>
+
+        <div class="skill-grid">
+
+            <section class="skill-box">
+                <h2>✅ Your Matched Skills</h2>
+                <p>Skills you already have for this career.</p>
+
+                {% for skill in matched_skills %}
+                    <div class="skill-item matched">
+                        ✓ {{ skill }}
+                    </div>
+                {% empty %}
+                    <div class="empty">
+                        No matched skills found yet.
+                    </div>
+                {% endfor %}
+            </section>
+
+            <section class="skill-box">
+                <h2>📚 Skills You Need to Learn</h2>
+                <p>
+                    These skills are required to improve your career readiness.
+                </p>
+
+                {% for skill in missing_skills %}
+                    <div class="skill-item missing">
+                        + {{ skill }}
+                    </div>
+                {% empty %}
+                    <div class="empty">
+                        Great! You have all the required skills.
+                    </div>
+                {% endfor %}
+            </section>
+
+        </div>
+
+        <section class="card" style="margin-top:26px;">
+            <h2>💡 Recommended Learning Priorities</h2>
+
+            <p class="description">
+                Focus on these skills to improve your career readiness.
+            </p>
+
+            {% for item in recommendations %}
+                <div class="recommendation">
+                    <strong>{{ item.skill }}</strong>
+                    <br>
+                    <span class="importance">
+                        {{ item.importance }} Priority
+                    </span>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    No additional learning recommendations.
+                </div>
+            {% endfor %}
+
+            <a href="{% url 'download_career_report' %}?career={{ selected_role.id }}"
+               class="btn report-btn">
+                ⬇ Download Career Report PDF
+            </a>
+        </section>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

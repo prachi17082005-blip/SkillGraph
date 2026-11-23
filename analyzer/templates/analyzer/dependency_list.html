@@ -1,0 +1,362 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Dependency Graph</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f4fc;
+            color: #302b52;
+        }
+
+        .dashboard-main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 27px;
+            color: #28234e;
+        }
+
+        .dashboard-header p {
+            color: #77758c;
+            margin-top: 6px;
+        }
+
+        .dashboard-header a {
+            color: #7047d7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(120deg, #5940b8, #9470e9);
+            color: white;
+            padding: 38px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(91, 65, 184, .16);
+        }
+
+        .welcome-banner h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-banner p {
+            color: #eee8ff;
+        }
+
+        .add-dependency-btn {
+            display: inline-block;
+            padding: 13px 23px;
+            background: #7047d7;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: .3s;
+        }
+
+        .add-dependency-btn:hover {
+            background: #5633b2;
+            transform: translateY(-2px);
+        }
+
+        .section-heading {
+            font-size: 22px;
+            margin: 32px 0 18px;
+            color: #302b52;
+        }
+
+        .graph-container {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-top: 20px;
+            border: 1px solid #ece9f7;
+            box-shadow: 0 6px 22px rgba(44, 35, 90, .05);
+        }
+
+        .graph-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+            padding: 25px 10px;
+        }
+
+        .graph-node {
+            min-width: 190px;
+            max-width: 240px;
+            padding: 25px 20px;
+            text-align: center;
+            background: linear-gradient(145deg, #f6f2ff, #eee9ff);
+            border: 1px solid #d9ccff;
+            border-radius: 16px;
+            color: #302b52;
+            box-shadow: 0 5px 15px rgba(112, 71, 215, .08);
+            transition: .3s;
+        }
+
+        .graph-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 22px rgba(112, 71, 215, .15);
+        }
+
+        .node-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            background: white;
+            border-radius: 13px;
+            font-size: 23px;
+        }
+
+        .graph-node h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .graph-node small {
+            color: #8067c5;
+            font-weight: 600;
+        }
+
+        .graph-arrow {
+            font-size: 35px;
+            color: #8059df;
+            font-weight: bold;
+        }
+
+        .graph-description {
+            text-align: center;
+            color: #77758c;
+            padding-bottom: 20px;
+        }
+
+        .graph-divider {
+            border: none;
+            border-top: 1px solid #eeeaf7;
+            margin: 10px 0;
+        }
+
+        .dependency-card {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            margin-top: 16px;
+            border: 1px solid #ece9f7;
+            border-left: 5px solid #8059df;
+            box-shadow: 0 5px 18px rgba(44, 35, 90, .05);
+            transition: .3s;
+        }
+
+        .dependency-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 22px rgba(44, 35, 90, .09);
+        }
+
+        .dependency-card h3 {
+            font-size: 18px;
+            color: #302b52;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .dependency-card p {
+            color: #77758c;
+            line-height: 1.6;
+        }
+
+        .empty-graph {
+            text-align: center;
+            padding: 45px 20px;
+            color: #77758c;
+        }
+
+        .empty-graph h2 {
+            color: #302b52;
+            margin-bottom: 12px;
+        }
+
+        .empty-graph p {
+            margin-bottom: 22px;
+        }
+
+        .dashboard-footer {
+            text-align: center;
+            color: #89869d;
+            padding: 30px 10px 10px;
+            margin-top: 35px;
+            border-top: 1px solid #e9e6f2;
+            font-size: 14px;
+        }
+
+        @media(max-width: 600px) {
+            .dashboard-main {
+                padding: 22px 15px;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .welcome-banner {
+                padding: 27px 22px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 24px;
+            }
+
+            .graph-container {
+                padding: 15px;
+            }
+
+            .graph-flow {
+                gap: 12px;
+            }
+
+            .graph-arrow {
+                transform: rotate(90deg);
+            }
+
+            .graph-node {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-main">
+
+    <header class="dashboard-header">
+        <div>
+            <h2>Skill Dependency Graph</h2>
+            <p>Visualize your skill learning connections.</p>
+        </div>
+        <a href="{% url 'dashboard' %}">← Dashboard</a>
+    </header>
+
+    <div class="welcome-banner">
+        <h1>Explore Your Skill Network</h1>
+        <p>Understand which skill you should learn first and build your learning path.</p>
+    </div>
+
+    <a href="{% url 'add_dependency' %}" class="add-dependency-btn">
+        + Add Dependency
+    </a>
+
+    <h2 class="section-heading">Visual Skill Graph</h2>
+
+    <div class="graph-container">
+
+        {% if dependencies %}
+
+            {% for item in dependencies %}
+
+                <div class="graph-flow">
+
+                    <div class="graph-node">
+                        <div class="node-icon">📘</div>
+                        <h3>{{ item.prerequisite.skill_name }}</h3>
+                        <small>Prerequisite Skill</small>
+                    </div>
+
+                    <div class="graph-arrow">→</div>
+
+                    <div class="graph-node">
+                        <div class="node-icon">🚀</div>
+                        <h3>{{ item.skill.skill_name }}</h3>
+                        <small>Next Skill</small>
+                    </div>
+
+                </div>
+
+                <p class="graph-description">
+                    {{ item.description|default:"Learning connection" }}
+                </p>
+
+                {% if not forloop.last %}
+                    <hr class="graph-divider">
+                {% endif %}
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-graph">
+                <h2>📊 No Skill Connections Yet</h2>
+                <p>Add your first skill dependency to create your learning graph.</p>
+                <a href="{% url 'add_dependency' %}"
+                   class="add-dependency-btn">
+                    Create First Connection
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <h2 class="section-heading">Your Dependency Records</h2>
+
+    {% for item in dependencies %}
+
+        <div class="dependency-card">
+            <h3>
+                {{ item.prerequisite.skill_name }}
+                → {{ item.skill.skill_name }}
+            </h3>
+
+            <p>
+                {{ item.description|default:"Skill learning connection" }}
+            </p>
+        </div>
+
+    {% empty %}
+
+        <div class="dependency-card">
+            <p>No dependency records available.</p>
+        </div>
+
+    {% endfor %}
+
+    <footer class="dashboard-footer">
+        SkillGraph © 2026 | Learn • Analyze • Grow
+    </footer>
+
+</div>
+
+</body>
+</html>

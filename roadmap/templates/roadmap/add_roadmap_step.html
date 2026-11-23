@@ -1,0 +1,407 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillGraph | Add Learning Step</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body.dashboard-page {
+            margin: 0;
+            background: #f6f7ff;
+            font-family: Arial, sans-serif;
+            color: #25234a;
+        }
+
+        .dashboard-main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 25px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-header h2 {
+            margin: 0 0 8px;
+            color: #292568;
+            font-size: 25px;
+        }
+
+        .dashboard-header p {
+            margin: 0;
+            color: #777;
+        }
+
+        .dashboard-header a {
+            text-decoration: none;
+            color: #6256db;
+            font-weight: 600;
+            background: white;
+            padding: 11px 17px;
+            border-radius: 9px;
+            border: 1px solid #e5e3fa;
+        }
+
+        .dashboard-header a:hover {
+            background: #6256db;
+            color: white;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(120deg, #5145cd, #8275ef);
+            color: white;
+            padding: 32px;
+            border-radius: 18px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 25px rgba(81,69,205,.16);
+        }
+
+        .welcome-banner h1 {
+            margin: 0 0 10px;
+            font-size: 27px;
+        }
+
+        .welcome-banner p {
+            margin: 0;
+            color: #eeedff;
+            line-height: 1.6;
+        }
+
+        .step-form-card {
+            max-width: 780px;
+            margin: 30px auto;
+            padding: 38px;
+            background: white;
+            border: 1px solid #ecebfa;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(40,40,100,.07);
+        }
+
+        .roadmap-info {
+            padding: 20px;
+            background: #f6f4ff;
+            border: 1px solid #e9e5ff;
+            border-radius: 13px;
+            margin-bottom: 28px;
+        }
+
+        .roadmap-info h2 {
+            color: #292568;
+            margin: 0 0 9px;
+            font-size: 21px;
+        }
+
+        .roadmap-info p {
+            color: #77758d;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .form-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 25px;
+        }
+
+        .form-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #efedff;
+            border-radius: 14px;
+            font-size: 24px;
+        }
+
+        .form-heading h3 {
+            margin: 0 0 6px;
+            color: #292568;
+            font-size: 20px;
+        }
+
+        .form-heading p {
+            margin: 0;
+            color: #85839a;
+            font-size: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 23px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #38345f;
+            margin-bottom: 9px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e05272;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0ef;
+            border-radius: 11px;
+            background: #fafaff;
+            font-size: 15px;
+            color: #333;
+            font-family: Arial, sans-serif;
+            transition: .2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6256db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(98,86,219,.10);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #aaa8bb;
+        }
+
+        .form-hint {
+            display: block;
+            margin-top: 7px;
+            color: #9694a8;
+            font-size: 12px;
+        }
+
+        .form-message {
+            background: #f0f9f2;
+            color: #24713b;
+            border: 1px solid #d5eedb;
+            padding: 13px 15px;
+            border-radius: 9px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 13px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            padding-top: 23px;
+            border-top: 1px solid #eeeef6;
+        }
+
+        .submit-btn {
+            border: none;
+            padding: 14px 23px;
+            border-radius: 10px;
+            background: linear-gradient(120deg, #5145cd, #7669e8);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(81,69,205,.25);
+        }
+
+        .cancel-link {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 10px;
+            background: #f1f1f8;
+            color: #55536b;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .cancel-link:hover {
+            background: #e7e6f4;
+        }
+
+        .dashboard-footer {
+            text-align: center;
+            padding: 25px 10px;
+            margin-top: 35px;
+            color: #77758c;
+            font-size: 13px;
+            border-top: 1px solid #e9e8f4;
+        }
+
+        .dashboard-footer p {
+            margin: 7px 0 0;
+            color: #9997aa;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-main {
+                padding: 20px 14px;
+            }
+
+            .step-form-card {
+                padding: 23px 18px;
+            }
+
+            .welcome-banner {
+                padding: 25px 20px;
+            }
+
+            .welcome-banner h1 {
+                font-size: 22px;
+            }
+
+            .dashboard-header h2 {
+                font-size: 21px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .submit-btn,
+            .cancel-link {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-main">
+
+    <header class="dashboard-header">
+        <div>
+            <h2>Add Learning Step</h2>
+            <p>Add a new skill to your learning journey.</p>
+        </div>
+
+        <a href="{% url 'roadmap_list' %}">← Back to Roadmaps</a>
+    </header>
+
+    <section class="welcome-banner">
+        <h1>📚 Build Your Skills</h1>
+        <p>Break your career goal into manageable learning steps.</p>
+    </section>
+
+    <section class="step-form-card">
+
+        <div class="roadmap-info">
+            <h2>{{ roadmap.title }}</h2>
+            <p>Career Goal: {{ roadmap.career_goal }}</p>
+        </div>
+
+        <div class="form-heading">
+            <div class="form-icon">🎯</div>
+            <div>
+                <h3>Learning Step Details</h3>
+                <p>Add the skill and define your learning schedule.</p>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="form-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="skill_name">Skill Name <span class="required">*</span></label>
+                <input
+                    type="text"
+                    id="skill_name"
+                    name="skill_name"
+                    placeholder="Example: Python Programming"
+                    maxlength="150"
+                    required>
+                <span class="form-hint">Enter the skill you want to learn.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Learning Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="What will you learn in this step?"></textarea>
+                <span class="form-hint">Describe the topics or activities included in this step.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="level">Difficulty Level <span class="required">*</span></label>
+                <select name="level" id="level" required>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duration_days">Estimated Duration (Days) <span class="required">*</span></label>
+                <input
+                    type="number"
+                    id="duration_days"
+                    name="duration_days"
+                    min="1"
+                    max="365"
+                    value="7"
+                    required>
+                <span class="form-hint">Choose how many days you need to complete this skill.</span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    Save Learning Step →
+                </button>
+
+                <a href="{% url 'roadmap_list' %}" class="cancel-link">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+    <footer class="dashboard-footer">
+        SkillGraph © 2026
+        <p>Learn • Analyze • Grow</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
